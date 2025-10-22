@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-app="velvet-vt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Velvet VT — Native View Transitions</title>
+
+  <!-- Deps -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Bakbak One (H1) + Mulish (body + H2/H3 @ 800) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="vt-app" data-scope="app">
+    <header id="mast" class="mast" aria-label="Site header">
+      <a class="brand" href="#/home" data-link>
+        <i class="fa-solid fa-bolt"></i>
+        <span id="brand-name" class="brand-name">Velvet VT</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="#/home" data-link class="is-active">Home</a></li>
+          <li><a href="#/work" data-link>Work</a></li>
+          <li><a href="#/about" data-link>About</a></li>
+          <li><a href="#/contact" data-link>Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="tools">
+        <!-- Motion toggle -->
+        <button id="motion-toggle" class="ghost" aria-pressed="false" title="Toggle motion">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="label">Motion: On</span>
+        </button>
+
+        <!-- Bypass VT for next nav -->
+        <a href="#/work" data-link data-vt="off" class="ghost" title="Bypass View Transitions for next nav">
+          <i class="fa-regular fa-circle-stop"></i><span class="sr-only">Bypass VT</span>
+        </a>
+
+        <!-- Open modal demo -->
+        <button id="open-modal" class="ghost" title="Open modal with VT">
+          <i class="fa-regular fa-window-maximize"></i><span class="sr-only">Open modal</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="stage" class="stage" tabindex="-1" aria-live="polite" aria-busy="false"></main>
+
+    <footer class="foot" role="contentinfo">
+      <p>Built with <strong>Native View Transitions</strong> •
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API" target="_blank" rel="noreferrer noopener">Docs</a>
+      </p>
+      <!-- Performance badges (live) -->
+      <div class="perf-badges" aria-label="Live performance metrics">
+        <span class="badge" id="badge-inp" title="Interaction to Next Paint">INP: —</span>
+        <span class="badge" id="badge-cls" title="Cumulative Layout Shift">CLS: —</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =========================
+       MODAL (same-document)
+       ========================= -->
+  <div id="vt-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__sheet" role="document" tabindex="-1">
+      <header class="modal__head">
+        <h2 id="modal-title">Velvet Glass Modal</h2>
+        <button class="modal__close" id="close-modal" aria-label="Close dialog">
+          <i class="fa-regular fa-circle-xmark"></i>
+        </button>
+      </header>
+      <div class="modal__body">
+        <p>This dialog opens/closes using <code>document.startViewTransition</code>, while the backdrop and sheet are named for shared transitions.</p>
+        <ul class="bullets">
+          <li>Focus trap + ESC to close</li>
+          <li>Backdrop blur, “velvet glass” overlay</li>
+          <li>Respects reduced motion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Routes -->
+  <template id="tpl-home">
+    <section data-route="home" class="panel">
+      <header class="hero">
+        <h1 id="hero-title">Native Motion, No Framework</h1>
+        <p class="lede">Smooth page/state swaps using the View Transitions API, with layered regions for a deluxe feel.</p>
+        <div class="cta-row">
+          <a href="#/work" data-link class="cta"><i class="fa-solid fa-arrow-right"></i> See the Work</a>
+          <a href="#/about" data-link class="cta ghost">How it works</a>
+        </div>
+      </header>
+
+      <div class="grid">
+        <article id="feat-card" class="card">
+          <h3>Shared Elements</h3>
+          <p>Give matching elements the same IDs across routes to crossfade/scale them gracefully.</p>
+        </article>
+        <article class="card">
+          <h3>Velvet Overlays</h3>
+          <p>Soft grain + color-wash + glass blur give the site a premium tactile feel.</p>
+        </article>
+        <article class="card">
+          <h3>Controls</h3>
+          <p>Motion toggle, VT bypass, and a modal that animates with the same API.</p>
+        </article>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-work">
+    <section data-route="work" class="panel">
+      <header class="hero">
+        <h1 id="hero-title">Work Samples</h1>
+        <p class="lede">A pretend portfolio grid to show how content reflows while key elements stay “shared”.</p>
+      </header>
+      <div class="grid cards">
+        <article id="feat-card" class="card loud">
+          <h3>Featured Tile</h3>
+          <p>Reuses <code>id="feat-card"</code> across routes for a smoother morph.</p>
+        </article>
+        <article class="card"><h3>Gallery</h3><p>Think filterable 2-D masonry with CQs.</p></article>
+        <article class="card"><h3>Case Study</h3><p>Scroll-driven CSS only; reduced-motion path.</p></article>
+        <article class="card"><h3>PWA</h3><p>Installable shell + prefetching.</p></article>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-about">
+    <section data-route="about" class="panel">
+      <header class="hero">
+        <h1 id="hero-title">About Velvet VT</h1>
+        <p class="lede">Same-document navigation swaps content in-place, so the transition is fluid and fast.</p>
+      </header>
+      <div class="grid">
+        <article id="feat-card" class="card">
+          <h3>Under the Hood</h3>
+          <ul class="bullets">
+            <li>Detect <code>startViewTransition</code></li>
+            <li>Name regions via <code>view-transition-name</code></li>
+            <li>Hash routing for simplicity</li>
+            <li>Focus management for a11y</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Extend It</h3>
+          <p>Add route-specific images/components that reuse IDs for shared-element effects.</p>
+        </article>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-contact">
+    <section data-route="contact" class="panel">
+      <header class="hero">
+        <h1 id="hero-title">Contact</h1>
+        <p class="lede">Swap into a form view; keep header/feature elements smoothly animated.</p>
+      </header>
+      <form class="card form">
+        <label>
+          <span>Name</span>
+          <input type="text" required />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" required />
+        </label>
+        <label>
+          <span>Message</span>
+          <textarea rows="4" required></textarea>
+        </label>
+        <button class="cta" type="submit"><i class="fa-regular fa-paper-plane"></i> Send</button>
+      </form>
+    </section>
+  </template>
+
+  <!-- (Optional) Speculation Rules for path-based routes (not used for hash routes) -->
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      { "source": "list", "urls": ["/home", "/work", "/about", "/contact"] }
+    ],
+    "prerender": [
+      { "source": "list", "urls": ["/work"] }
+    ]
+  }
+  </script>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
