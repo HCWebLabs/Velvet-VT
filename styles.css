@@ -1,0 +1,209 @@
+/* =========================
+   HARD + DEEP SCOPE
+   ========================= */
+#vt-app[data-scope="app"],
+#vt-app[data-scope="app"] * { box-sizing:border-box }
+
+:root{
+  --bg:#0b0e14;
+  --ink:#e9eef7;
+  --muted:#b9c2d6;
+  --line:#223;
+  --aqua:#53e2f5;
+  --vio:#a56cff;
+  --hot:#ff7ad9;
+
+  --rad:16px;
+  --pad:clamp(14px,2.2vw,24px);
+  --max:1120px;
+  --gap:clamp(12px,2.2vw,20px);
+
+  color-scheme: dark;
+}
+
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 16px/1.6 "Mulish", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* ======= Velvet overlay (subtle texture + color wash) ======= */
+body::before{
+  content:"";
+  position:fixed; inset:-20vmax;
+  pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(60vmax 60vmax at 15% 10%, #4ed7ff20, transparent 60%),
+    radial-gradient(50vmax 50vmax at 85% 20%, #a56cff22, transparent 60%),
+    radial-gradient(70vmax 70vmax at 50% 100%, #ff7ad920, transparent 60%),
+    linear-gradient(180deg, #ffffff03, #00000000);
+  filter: saturate(110%) contrast(105%);
+}
+
+/* Optional soft grain for tactile feel */
+body::after{
+  content:"";
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+/* Layout */
+#vt-app .mast,
+#vt-app .stage,
+#vt-app .foot{ max-width:var(--max); margin:auto; padding:var(--pad) }
+
+#vt-app .mast{
+  display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:var(--gap);
+  border-bottom:1px solid var(--line);
+  backdrop-filter: saturate(120%) blur(6px);
+  background:#0b0e14cc;
+  position:sticky; top:0; z-index:20;
+  view-transition-name: mast;
+}
+
+#vt-app .brand{ display:flex; gap:10px; align-items:center; text-decoration:none; color:var(--ink); font-weight:700 }
+#vt-app .brand .fa-bolt{ color:var(--aqua) }
+
+#vt-app .brand-name{
+  font-family: "Bakbak One", system-ui, sans-serif;
+  font-weight: 400; /* Bakbak One is single-weight */
+  letter-spacing: 0.2px;
+  font-size: clamp(18px,3.2vw,24px);
+  view-transition-name: brand;
+}
+
+/* H1 remains Bakbak One */
+#vt-app h1{
+  font-family: "Bakbak One", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.05;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.2px;
+  view-transition-name: hero-title;
+}
+
+/* Section & card titles in Mulish 800 (contrast bump) */
+#vt-app h2,
+#vt-app h3,
+#vt-app .card h3 {
+  font-family: "Mulish", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+  margin: 0 0 8px 0;
+}
+
+#vt-app .lede{ color:var(--muted); margin:0 0 16px 0 }
+#vt-app .cta-row{ display:flex; gap:10px; flex-wrap:wrap }
+#vt-app .cta{
+  display:inline-flex; align-items:center; gap:8px; padding:10px 14px;
+  background:linear-gradient(135deg, var(--aqua), var(--vio));
+  color:#001; font-weight:700; border-radius:999px; text-decoration:none; border:0;
+  box-shadow: 0 6px 24px #0008;
+}
+#vt-app .cta.ghost{
+  background:#ffffff12; color:var(--ink); border:1px solid #ffffff22;
+}
+
+#vt-app .nav{ list-style:none; display:flex; gap:12px; margin:0; padding:0 }
+#vt-app .nav a{
+  display:inline-block; padding:8px 12px; text-decoration:none; color:var(--ink);
+  border:1px solid transparent; border-radius:999px;
+}
+#vt-app .nav a.is-active{ border-color:#ffffff29; background:#ffffff10 }
+#vt-app .nav a:focus-visible{ outline:2px solid var(--aqua); outline-offset:2px }
+
+#vt-app .tools{ display:flex; gap:8px; justify-self:end }
+#vt-app .ghost{
+  background:#ffffff12; border:1px solid #ffffff22; color:var(--ink);
+  padding:8px 10px; border-radius:999px; cursor:pointer; text-decoration:none;
+}
+#vt-app .ghost:hover{ background:#ffffff18 }
+
+#vt-app .stage{
+  min-height:60vh;
+  view-transition-name: stage;
+}
+
+#vt-app .panel .hero{ margin-bottom:var(--pad) }
+
+#vt-app .grid{ display:grid; gap:var(--gap); grid-template-columns: repeat(12, minmax(0,1fr)) }
+#vt-app .grid > *{ grid-column: span 12 }
+@media (min-width:720px){ #vt-app .grid > *{ grid-column: span 6 } }
+@media (min-width:1024px){ #vt-app .grid > *{ grid-column: span 4 } }
+
+#vt-app .card{
+  background:#0e1220cc; border:1px solid #ffffff12; border-radius:var(--rad);
+  padding:var(--pad);
+  view-transition-name: card;
+  backdrop-filter: blur(4px) saturate(115%);
+}
+#vt-app .card.loud{ border-color:#ffffff2a; box-shadow:0 10px 30px #0008 }
+
+/* Featured shared element */
+#vt-app #feat-card{ view-transition-name: featured }
+
+/* Forms */
+#vt-app .form label{ display:grid; gap:6px; margin-bottom:12px }
+#vt-app .form input, #vt-app .form textarea{
+  background:#0a0f1a; color:var(--ink); border:1px solid #ffffff22; border-radius:10px; padding:10px 12px;
+}
+#vt-app .form input:focus-visible, #vt-app .form textarea:focus-visible{ outline:2px solid #ff7ad9; outline-offset:2px }
+
+/* Footer */
+#vt-app .foot{ border-top:1px solid var(--line); color:var(--muted); font-size:14px; display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap }
+#vt-app .perf-badges{ display:flex; gap:8px }
+#vt-app .badge{ font:600 12px/1 "Mulish", system-ui; padding:6px 8px; border-radius:999px; border:1px solid #ffffff26; background:#ffffff12 }
+
+/* ======= View Transition tuning ======= */
+::view-transition-old(root), ::view-transition-new(root){ animation-duration: 280ms }
+::view-transition-old(mast), ::view-transition-new(mast) { animation-timing-function: ease }
+::view-transition-old(stage), ::view-transition-new(stage) { animation-timing-function: ease }
+::view-transition-old(brand), ::view-transition-new(brand) { animation-duration: 360ms }
+::view-transition-old(featured), ::view-transition-new(featured) { animation-duration: 360ms }
+
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-old(root), ::view-transition-new(root){ animation-duration: 1ms }
+}
+
+/* ======= Modal ======= */
+.modal[hidden]{ display:none }
+.modal{
+  position:fixed; inset:0; z-index:50;
+  view-transition-name: modal-root;
+}
+.modal__backdrop{
+  position:absolute; inset:0;
+  background:#0009; backdrop-filter: blur(6px) saturate(120%);
+  view-transition-name: modal-backdrop;
+}
+.modal__sheet{
+  position:relative; margin:8vh auto 0; width:min(720px, 92vw);
+  background:#0e1220ee; border:1px solid #ffffff2a; border-radius:20px;
+  box-shadow:0 30px 80px #000d;
+  padding:clamp(16px, 3vw, 24px);
+  view-transition-name: modal-sheet;
+}
+.modal__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px }
+
+/* Modal title now Mulish 800 for contrast */
+.modal__head h2{
+  margin: 0;
+  font-family: "Mulish", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 3.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: 0.2px;
+}
+
+.modal__close{
+  background:#ffffff12; border:1px solid #ffffff22; color:var(--ink);
+  padding:8px 10px; border-radius:10px; cursor:pointer;
+}
+.modal__body{ color:var(--muted) }
+.bullets{ padding-left:1em }
+.bullets li{ margin:6px 0 }
+
+/* A11y helpers */
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
